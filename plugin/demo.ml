@@ -7,6 +7,10 @@ open Or_error
 
 exception Bad_user_input
 exception No_input
+
+let () =
+  try Dynlink.loadfile "" with _ -> ()
+
    
 let requires = ["llvm"; "disassemble"; "disassembler";]
 let () = match Bap_main.init ~requires () with

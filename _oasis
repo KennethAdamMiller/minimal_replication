@@ -25,10 +25,4 @@ Library raw_superset
                         Superset_impl,
                         Three_address_code
 
-Executable demo
-  Path:			src/
-  Install:        	true
-  MainIs:	  	demo.ml
-  CompiledObject: 	best
-  BuildDepends:   	core_kernel, bap, cmdliner, raw_superset, bap-future, findlib.dynload
 
