@@ -1,0 +1,47 @@
+opam-version: "1.2"
+name: "minimal_replication"
+version: "master"
+maintainer: "Kenneth Adam Miller <kennethadammiller@gmail.com>"
+authors: [
+    "Kenneth Adam Miller <kennethadammiller@gmail.com>" 
+    "Ivan Gotovchits <ivg@ieee.com>"
+]
+license: "MIT"
+build: [
+  ["./setup.sh"]
+  [make]
+]
+
+install: [
+  ["ocamlfind" "remove" "minimal_replication"]
+  ["make" "install"]
+  ["make" "install-plugin"]
+]
+
+remove: [
+  ["ocamlfind" "remove" "minimal_replication"]
+  ["rm" "-rf" "%{prefix}%/share/minimal_replication"]
+]
+
+depends: [
+    "bap"
+    "core_kernel"
+    "cmdliner"
+    "ocamlgraph"
+    "landmarks"
+    "bap-future"
+]
+
+depexts: [
+    [["ubuntu"] [
+        "libzip-dev"
+        "clang"
+        "llvm"
+        "m4"
+     ]]
+     [["osx" "macports"] [
+        "graphviz"
+        "curl"
+        "libzip"
+     ]]
+]
