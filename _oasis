@@ -1,0 +1,34 @@
+OASISFormat: 0.4
+Name:        minimal_replication
+Version:     0.1
+Synopsis:    A small project designed to duplicate some feature
+Authors:     Kenneth Adam Miller <kennethadammiller@gmail.com>
+Maintainers: Kenneth Adam Miller <kennethadammiller@gmail.com>
+License:     MIT
+Plugins:     META (0.4), DevFiles (0.4)
+AlphaFeatures: ocamlbuild_more_args
+BuildTools: ocamlbuild
+XOCamlbuildExtraArgs: -j 5
+BuildDepends:
+              core_kernel,
+              bap,
+              graphlib,
+              bap-future
+
+Library raw_superset
+  Path:                 src/
+  Install:		true
+  CompiledObject:	best
+  BuildDepends:		bap, core_kernel, cmdliner, graphlib, bap-future
+  Modules:		
+                        Superset,
+                        Superset_impl,
+                        Three_address_code
+
+Executable demo
+  Path:			src/
+  Install:        	true
+  MainIs:	  	demo.ml
+  CompiledObject: 	best
+  BuildDepends:   	core_kernel, bap, cmdliner, raw_superset, bap-future, findlib.dynload
+
