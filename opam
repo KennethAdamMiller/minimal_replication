@@ -15,7 +15,6 @@ build: [
 install: [
   ["ocamlfind" "remove" "minimal_replication"]
   ["make" "install"]
-  ["make" "install-plugin"]
 ]
 
 remove: [
