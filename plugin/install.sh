@@ -1,1 +1,1 @@
-bapbundle install superset_disassembler.plugin
+bapbundle install demo.plugin
