@@ -54,6 +54,10 @@ module Core = struct
       keep        = Addr.Hash_set.create ();
     }
 
+  let mark_bad superset addr =
+    if OG.mem_vertex superset.insn_risg addr then
+      Hash_set.add superset.bad addr
+
   let next_chunk mem ~addr =
     let next_addr = Addr.succ addr in
     Memory.view ~from:next_addr mem
