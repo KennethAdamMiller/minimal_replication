@@ -120,9 +120,48 @@ module Core = struct
     disasm ?backend ~accu:superset ~f superset.arch mem |> ok_exn
 end
 
+module ISG = struct
+  let descendants superset =
+    OG.pred superset.insn_risg
+
+end
+
 module Inspection = struct
   let contains_addr superset addr =
     Memmap.contains superset.sections addr
+
+  let static_successors superset mem insn =
+    let brancher = superset.brancher in
+    let addr = Memory.min_addr mem in
+    if Addr.Table.mem superset.lifted addr then
+      let l = ISG.descendants superset addr in
+      List.map l ~f:(fun dst ->
+          (Some dst, `Fall)
+        )
+    else
+      match insn with 
+      | None -> [None, `Fall]
+      | Some insn -> 
+         try
+           (*match KB.Value.get Insn.Slot.dests insn with 
+         | None -> KB.return []
+         | Some dsts ->
+            let open KB.Syntax in
+            KB.all @@
+            List.map (Set.to_list dsts) ~f:(fun branchlbl ->
+                Theory.Label.target branchlbl >>= fun tgt -> (
+                  KB.collect Theory.Label.addr branchlbl >>= fun addr ->
+                  KB.return @@ Option.map addr ~f:(fun addr ->
+                      (Word.code_addr tgt addr, `Fall)
+                    )
+                )
+              )*)
+           Brancher.resolve brancher mem insn
+         with _ -> (
+           print_endline @@ 
+             "Target resolve failed on memory at " ^ Memory.to_string mem; 
+           [None, `Fall] (*KB.return []*)
+         )
 
 end
 
