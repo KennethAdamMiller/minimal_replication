@@ -85,6 +85,29 @@ module Core = struct
             )) in print_endline "disasm finished";
                   r
 
+  let lookup superset addr =
+    Map.find superset.insn_map addr
+
+  let lift_at superset addr =
+    match Addr.Table.find superset.lifted addr with
+    | Some (bil) -> Some (bil)
+    | None -> (
+      match lookup superset addr with
+      | Some (mem, insn) -> (
+        let bil =
+          Option.value_map insn ~default:[] ~f:(fun insn ->
+              match (superset.lifter mem insn) with
+              | Ok bil ->
+                 let bil = Three_address_code.map_bil bil in
+                 Addr.Table.set superset.lifted ~key:addr ~data:bil;
+                 bil
+              | _ -> []
+            ) in
+        Some (bil)
+      )
+      | None -> None
+    )
+
   let update_with_mem ?backend ?f superset mem =
     let f = Option.value f ~default:(fun (m, i) a -> a) in
     let f (mem, insn) superset =
