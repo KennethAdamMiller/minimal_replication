@@ -93,6 +93,12 @@ module Core = struct
     disasm ?backend ~accu:superset ~f superset.arch mem |> ok_exn
 end
 
+module Inspection = struct
+  let contains_addr superset addr =
+    Memmap.contains superset.sections addr
+
+end
+
 let with_img ~accu img ~f =
   let segments = Table.to_sequence @@ Image.segments img in
   Seq.fold segments ~init:accu ~f:(fun accu (mem, segment) ->
